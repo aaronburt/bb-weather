@@ -1,6 +1,6 @@
-package com.example.exampleplugin;
+package uk.co.aaronburt;
 
-import com.example.exampleplugin.config.ExamplePluginConfig;
+import uk.co.aaronburt.config.ExamplePluginConfig;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import net.bdavies.babblebot.BabblebotApplication;
@@ -40,8 +40,8 @@ public class DevMain {
     @Bean
     CommandLineRunner onBoot(GenericApplicationContext gac, IApplication app, PluginConfigParser parser) {
         return args -> {
-            gac.registerBean(ExamplePlugin.class);
-            ExamplePlugin plugin = app.get(ExamplePlugin.class);
+            gac.registerBean(Weather.class);
+            Weather plugin = app.get(Weather.class);
             val configObj = ExamplePluginConfig.builder()
                     .someValue("Test")
                     .build();
@@ -55,7 +55,7 @@ public class DevMain {
                                     .name("example")
                                     .pluginType(PluginType.JAVA)
                                     .config(config)
-                                    .namespace("ep")
+                                    .namespace("weather")
                                     .pluginPermissions(EPluginPermission.all())
                                     .build()
                     );

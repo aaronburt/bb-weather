@@ -1,4 +1,4 @@
-package com.example.exampleplugin.config;
+package uk.co.aaronburt.config;
 
 import lombok.Builder;
 import lombok.Data;

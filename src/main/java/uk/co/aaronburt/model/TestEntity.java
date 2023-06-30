@@ -1,4 +1,4 @@
-package com.example.exampleplugin.model;
+package uk.co.aaronburt.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

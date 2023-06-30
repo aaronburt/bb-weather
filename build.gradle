@@ -28,7 +28,7 @@ dependencies {
 }
 
 shadowJar {
-    archivesBaseName = 'testplugin'
+    archivesBaseName = 'weather'
     exclude("${project.mainDevClass.replace('.', '/')}*")
     configurations = [project.configurations.api]
     archiveAppendix = ''
