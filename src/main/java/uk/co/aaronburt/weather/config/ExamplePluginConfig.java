@@ -1,4 +1,4 @@
-package uk.co.aaronburt.config;
+package uk.co.aaronburt.weather.config;
 
 import lombok.Builder;
 import lombok.Data;

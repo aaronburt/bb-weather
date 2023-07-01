@@ -7,10 +7,10 @@ sourceCompatibility = '17'
 targetCompatibility = '17'
 
 ext {
-    mainDevClass = 'uk.co.aaronburt.DevMain'
+    mainDevClass = 'uk.co.aaronburt.weather.DevMain'
 }
 
-group 'com.example'
+group 'uk.co.aaronburt.weather'
 
 
 repositories {
@@ -21,7 +21,7 @@ repositories {
 project.configurations.api.canBeResolved(true)
 
 dependencies {
-    implementation 'com.github.bendavies99:BabbleBot-Server:v3.0.0-rc.19'
+    implementation 'com.github.bendavies99:BabbleBot-Server:v3.0.0-rc.21'
     implementation "org.springframework.boot:spring-boot-starter-data-jpa:3.1.0"
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     implementation 'org.slf4j:slf4j-api:2.0.7'

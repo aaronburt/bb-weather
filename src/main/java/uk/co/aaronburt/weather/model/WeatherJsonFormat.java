@@ -1,4 +1,4 @@
-package uk.co.aaronburt.model;
+package uk.co.aaronburt.weather.model;
 
 
 import com.fasterxml.jackson.annotation.JsonAlias;

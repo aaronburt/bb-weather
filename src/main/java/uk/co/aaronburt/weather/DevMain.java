@@ -1,13 +1,10 @@
-package uk.co.aaronburt;
+package uk.co.aaronburt.weather;
 
-import uk.co.aaronburt.config.ExamplePluginConfig;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import net.bdavies.babblebot.BabblebotApplication;
 import net.bdavies.babblebot.api.IApplication;
 import net.bdavies.babblebot.api.config.EPluginPermission;
 import net.bdavies.babblebot.api.plugins.PluginType;
-import net.bdavies.babblebot.plugins.PluginConfigParser;
 import net.bdavies.babblebot.plugins.PluginModel;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -30,32 +27,27 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @Import(BabblebotApplication.class)
 @EnableAutoConfiguration
-@EnableJpaRepositories(basePackages = {"net.bdavies.babblebot", "com.example.exampleplugin"})
-@EntityScan(basePackages = {"net.bdavies.babblebot", "com.example.exampleplugin"})
+@EnableJpaRepositories(basePackages = {"net.bdavies.babblebot", "uk.co.aaronburt.weather"})
+@EntityScan(basePackages = {"net.bdavies.babblebot", "uk.co.aaronburt.weather"})
 public class DevMain {
     public static void main(String[] args) {
         IApplication app = BabblebotApplication.make(DevMain.class, args);
     }
 
     @Bean
-    CommandLineRunner onBoot(GenericApplicationContext gac, IApplication app, PluginConfigParser parser) {
+    CommandLineRunner onBoot(GenericApplicationContext gac, IApplication app) {
         return args -> {
             gac.registerBean(Weather.class);
             Weather plugin = app.get(Weather.class);
-            val configObj = ExamplePluginConfig.builder()
-                    .someValue("Test")
-                    .build();
-            gac.registerBean(ExamplePluginConfig.class, () -> configObj);
-            String config = parser.pluginConfigToString(configObj);
             app.getPluginContainer()
                     .addPlugin(
                             plugin,
                             PluginModel
                                     .builder()
-                                    .name("example")
+                                    .name("weatherapi")
                                     .pluginType(PluginType.JAVA)
-                                    .config(config)
-                                    .namespace("weather")
+                                    .config("{}")
+                                    .namespace("get")
                                     .pluginPermissions(EPluginPermission.all())
                                     .build()
                     );

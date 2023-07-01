@@ -1,7 +1,7 @@
-package uk.co.aaronburt;
+package uk.co.aaronburt.weather;
 
-import uk.co.aaronburt.model.TestRepository;
-import uk.co.aaronburt.model.WeatherJsonFormat;
+import uk.co.aaronburt.weather.model.TestRepository;
+import uk.co.aaronburt.weather.model.WeatherJsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,10 @@ import net.bdavies.babblebot.api.plugins.Plugin;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Edit me
@@ -29,18 +33,70 @@ import java.net.URL;
 public class Weather {
     private final TestRepository repository;
 
-    @Command(aliases = "get", description = "get the weather from zipcode")
-    @CommandParam(value = "zip", canBeEmpty = false, optional = false, exampleValue = "st7")
-    @CommandParam(value = "country", canBeEmpty = false, optional = false, exampleValue = "gb")
-    public EmbedMessage getWeather(DiscordMessage message, ICommandContext context) {
+
+    /**
+     *
+     * @param zip String - zipcode or postal code of the area
+     * @param country String - two letter code for the country
+     * @return WeatherJsonFormat
+     */
+    public WeatherJsonFormat getWeatherData(String zip, String country){
         try {
             String weatherUrlFormat = "https://weather.function.aaronburt.co.uk/current/%s/%s";
-            String weatherUrlFormatted = String.format(weatherUrlFormat, context.getParameter("zip"), context.getParameter("country"));
+            String weatherUrlFormatted = String.format(weatherUrlFormat, "cw123ej", "gb");
 
             ObjectMapper mapper = new ObjectMapper();
             HttpURLConnection url = (HttpURLConnection) new URL(weatherUrlFormatted).openConnection();
             WeatherJsonFormat jsonResponse = mapper.readValue(url.getInputStream(), WeatherJsonFormat.class);
             url.disconnect();
+            return jsonResponse;
+
+        } catch(Exception ignored){
+            System.out.println("error");
+        }
+        return null;
+    }
+
+
+    @Command(aliases = "tts-weather", description = "get the weather from zipcode")
+    @CommandParam(value = "zip", canBeEmpty = false, optional = false, exampleValue = "st7")
+    @CommandParam(value = "country", canBeEmpty = false, optional = false, exampleValue = "gb")
+
+    public String getWeatherTTS(DiscordMessage message, ICommandContext context){
+        try {
+
+            WeatherJsonFormat jsonResponse = getWeatherData(
+                    context.getParameter("zip"),
+                    context.getParameter("country")
+            );
+
+            String responseFormat = "Currently in %s, its %s with a high of %s and a low of %s";
+            return String.format(
+                    responseFormat,
+                    jsonResponse.getCity(),
+                    jsonResponse.getMain().getFeelsLike(),
+                    jsonResponse.getMain().getTempMax(),
+                    jsonResponse.getMain().getTempMin()
+            );
+
+        } catch(Exception e){
+            return "Unable to get information";
+        }
+    }
+
+
+
+
+    @Command(aliases = "weather", description = "get the weather from zipcode")
+    @CommandParam(value = "zip", canBeEmpty = false, optional = false, exampleValue = "st7")
+    @CommandParam(value = "country", canBeEmpty = false, optional = false, exampleValue = "gb")
+    public EmbedMessage getWeather(DiscordMessage message, ICommandContext context) {
+        try {
+
+            WeatherJsonFormat jsonResponse = getWeatherData(
+                    context.getParameter("zip"),
+                    context.getParameter("country")
+            );
 
             String titleFormat = "Weather in %s";
             String title = String.format(titleFormat, jsonResponse.getCity());
